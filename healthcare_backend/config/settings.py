@@ -19,7 +19,8 @@ def env(name, default=None, required=False):
 
 SECRET_KEY = env("DJANGO_SECRET_KEY", required=True)
 DEBUG = env("DJANGO_DEBUG", "False").lower() == "true"
-ALLOWED_HOSTS = [h.strip() for h in env("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",") if h.strip()]
+ALLOWED_HOSTS = [h.strip() for h in env("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1,.vercel.app").split(",") if h.strip()]
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in env("DJANGO_CSRF_TRUSTED_ORIGINS", "https://*.vercel.app").split(",") if o.strip()]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -37,6 +38,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -72,6 +74,7 @@ DATABASES = {
         "PASSWORD": env("DB_PASSWORD", required=True),
         "HOST": env("DB_HOST", "localhost"),
         "PORT": env("DB_PORT", "5432"),
+        "OPTIONS": {"sslmode": env("DB_SSLMODE", "prefer")},
     }
 }
 
@@ -90,6 +93,11 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
