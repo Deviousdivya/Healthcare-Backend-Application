@@ -12,6 +12,8 @@ load_dotenv(BASE_DIR / ".env")
 
 def env(name, default=None, required=False):
     value = os.getenv(name, default)
+    if isinstance(value, str):
+        value = value.strip()  # pasted values often carry stray spaces/tabs
     if required and value in (None, ""):
         raise ImproperlyConfigured(f"Set the {name} environment variable (see .env.example).")
     return value
