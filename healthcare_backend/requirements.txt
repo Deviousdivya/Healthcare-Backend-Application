@@ -1,0 +1,17 @@
+# Healthcare Backend - Python dependencies (install with: pip install -r requirements.txt)
+#
+# Local development superuser (Django admin at /admin/ and API login at /api/auth/login/):
+#   email:    admin@healthcare.com
+#   password: BCOi4uxTeJOQy0#9a
+# For local development only - change this password and do not reuse it anywhere real.
+
+asgiref==3.13.0
+Django==5.2.18
+djangorestframework==3.18.3
+djangorestframework_simplejwt==5.5.1
+psycopg==3.3.6
+psycopg-binary==3.3.6
+PyJWT==2.15.1
+python-dotenv==1.2.4
+sqlparse==0.6.0
+tzdata==2026.5
