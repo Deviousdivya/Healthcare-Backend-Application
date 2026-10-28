@@ -69,12 +69,14 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DB_NAME", required=True),
-        "USER": env("DB_USER", required=True),
-        "PASSWORD": env("DB_PASSWORD", required=True),
-        "HOST": env("DB_HOST", "localhost"),
+        # DB_* names win; the PG* names are the ones Vercel's Neon integration provides.
+        "NAME": env("DB_NAME", os.getenv("PGDATABASE"), required=True),
+        "USER": env("DB_USER", os.getenv("PGUSER"), required=True),
+        "PASSWORD": env("DB_PASSWORD", os.getenv("PGPASSWORD"), required=True),
+        "HOST": env("DB_HOST", os.getenv("PGHOST", "localhost")),
         "PORT": env("DB_PORT", "5432"),
         "OPTIONS": {"sslmode": env("DB_SSLMODE", "prefer")},
+        "DISABLE_SERVER_SIDE_CURSORS": True,  # needed behind Neon's connection pooler
     }
 }
 
